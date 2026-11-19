@@ -7,6 +7,10 @@ module dff_sync(
     output Qnot
 );
 
+initial begin
+    Q <= 1'b0;
+end 
+
 always @(posedge clk)
 begin
     if(reset)

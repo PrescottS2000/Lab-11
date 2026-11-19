@@ -11,25 +11,28 @@ module modulo(
     wire [2:0]Cout;
     wire [2:0]Y;
     wire outlogic;
+    wire connection;
+    
+    assign connection = Q[2] & Q[1] & ~Q[0];
     
     dff_sync dff0(
         .D(Y[0]),
         .clk(Center),
-        .reset(Up),
+        .reset(Up | connection),
         .Q(Q[0])
         
         );
     dff_sync dff1(
         .D(Y[1]),
         .clk(Center),
-        .reset(Up),
+        .reset(Up | connection),
         .Q(Q[1])
         );
     
     dff_sync dff2(
         .D(Y[2]),
         .clk(Center),
-        .reset(Up),
+        .reset(Up | connection),
         .Q(Q[2])
         );    
         
@@ -56,9 +59,11 @@ module modulo(
         .Cout(Cout[2])
         );
         
-        assign outlogic = (Q[0] & ~Q[1] & Q[2]) ^ (Output);
+        assign outlogic = connection ^ Output;
+        
+ 
      
-     dff dffout(
+     dff_sync dffout(
         .D(outlogic),
         .clk(Center),
         .reset(Up),
